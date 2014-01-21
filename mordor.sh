@@ -202,7 +202,7 @@ balrog_name() {
 }
 
 # Process a parsed URL
-# This is the meat of Mordor!
+# This is a big deal - It's the first part that *does things*!
 process_parsed_url() {
 	infoz "Processing parsed URL..."
 	# What prefix (`git&` or `balrog&`)
@@ -266,6 +266,16 @@ process_parsed_url() {
 }
 
 
+# The Moste Importante Bitte
+# install_package is *recursive*, that is, it looks at a package, checks dependancies, and calls itself on those dependancies!
+install_package() {
+	# Path to Orcfile
+	location="$1"
+
+	name=`head --lines=10 | "$location" | grep -oP "(?<=<sometag param=').*?(?='>)"
+
+}
+
 # The program!
 
 # Get our <url> option
@@ -281,13 +291,3 @@ infoz "Prefixed with $prefix"
 
 # OK, now process *that*...
 process_parsed_url parsed_url prefix
-
-		
-		
-
-
-
-	
-
-
-
