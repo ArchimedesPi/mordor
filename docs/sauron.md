@@ -8,10 +8,10 @@ Basically the structure of Sauron is as follows (pardon bad ASCII art):
 		|
 		\
 		|-- foobar
-		|	|______ Orcfile
+		|	|______ Orcfile.sh
 		|
 		|-- drumpkin
-		|	|______ Orcfile
+		|	|______ Orcfile.sh
 		.
 		.
 		.

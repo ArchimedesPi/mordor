@@ -17,19 +17,19 @@ file_issue() {
 # Print an INFO message
 infoz() {
 	message="[INFO]: $1"
-	echo message
+	echo $message
 }
 
 # Print an ERROR message
 errorz() {
 	message="[ERROR]: $1"
-	echo >&2 message
+	echo >&2 $message
 }
 
 #Print a WARNING message
 warningz() {
 	message="[WARNING]: $1"
-	echo message
+	echo $message
 }
 
 # Everything-After cutter
@@ -76,10 +76,10 @@ get_repo() {
 	# Our url
 	url="$1"
 	# Where does it go / what is is named?
-	name="$2"
+	#name="$2"
 
 	####GIT it####
-	git clone "$url" "$name"
+	git clone "$url" #"$name"
 
 }
 
@@ -88,7 +88,7 @@ git_fetch() {
 	# Repo
 	url="$1"
 	# Name to clone to
-	name="$2"
+	#name="$2"
 	# Directory to save to
 	dir="$3"
 
@@ -97,7 +97,7 @@ git_fetch() {
 	cd "$dir"
 	
 	# Get the repo
-	get_repo "$url" "$name"
+	get_repo "$url" #"$name"
 
 	# What's it named?
 	reponame = `ls`
@@ -216,35 +216,46 @@ process_parsed_url() {
 		# Fetch! BTW put it in .mordor/
 		location=`git_fetch "$git_url" "" ".mordor"`
 		infoz "Found Orcfile!"
-		install_package "$location" "Orcfile"
+		install_package "$location" "Orcfile.sh"
 		
 		;;
 	("balrog")
+		# It's a balrog!
+		infoz "Just a Balrog!"
 		# Get everything after `balrog&`
 		postfix=`cut_after "$parsed_url" "&" "end"`
 		# Get the repo's URL
 		git_url=`echo $postfix | cut -d'^' -f 1`
+		infoz "Balrog URL: $git_url"
 		# What package does the user want?
 		package=`echo $postfix | cut -d'^' -f 2`
+		infoz "Selecting package \`$package\`"
 		# Check if the Balrog is already downloaded! Make sure it's not hiding/lurking around a corner (;
 		is_balrog_installed=`check_balrog_installed $git_url`
+		infoz "The Balrog is installed: $is_balrog_installed"
 		# Do different things if the Balrog's there or not.
 		if !is_balrog_installed; then
 			# Fetch our Balrog! BTW put it in .mordor/balrogs
+			infoz "Fetching Balrog!"
 			location=`git_fetch "$git_url" "" ".mordor/balrogs"`
 		else
 			# What's the Balrog's name?
 			balrog_name=`balrog_name "$git_url"`
+			infoz "This Balrog is named \"$balrog_name\""
 			# Where is it hiding?
 			location=".mordor/$balrog_name"
+			infoz "The balrog is in $location"
 			# Make sure the Balrog is up to date!
+			infoz "Updating Balrog..."
 			git_pull "$location"
 		fi
 
 		# Where *is* that Balrog?
+		# This combines the Balrog's location with the *package name*.
 		location="$location/$package"
+
 		# Aaaah. Let's install the package. Load an Orcfile!
-		install_package "$location" "Orcfile"
+		install_package "$location" "Orcfile.sh"
 		;;
 	(*)
 		# This is only called if someone makes a coding mistake! (Me most likely...)
@@ -262,9 +273,11 @@ url="$1"
 
 # Parse it
 parsed_url=`parse_url_handler "$url"`
+infoz "Parsed URL to $parsed_url"
 
 # Get the prefix (everything before &)
 prefix=`echo $parsed_url | cut -d'&' -f 1`
+infoz "Prefixed with $prefix"
 
 # OK, now process *that*...
 process_parsed_url parsed_url prefix
