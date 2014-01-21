@@ -12,9 +12,11 @@
 ####		+ <url> can be:
 #####		|______ + `gist:<gitid>` Enter a gist ID, the gist should contain an Orcfile
 #####		|______ + `git:<url>`	URL to a git repo, `git://` or `ssh://` or `https://` should work!
+#####		|______ + `sauron:<packagename>` Get <packagename> from Sauron
+#####		|______ + `balrog:<url>@<packagename>` Get <packagename> from git repo <url>
 ###	+ The rest of the arguments are passed to the Orcfile
 
-
+# *Run it in the same directory each time if you want script caching!!!*
 
 ##   That's all,
 #	ArchimedesPi
