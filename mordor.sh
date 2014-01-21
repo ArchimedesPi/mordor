@@ -54,6 +54,7 @@ cut_after() {
     			;;
 	esac
 	
+	# Which end?
 	case $pos in
 		("front")
 			echo "$front"
@@ -91,11 +92,14 @@ git_fetch() {
 	# Directory to save to
 	dir="$3"
 
+	# Make a new directory to put it in!
 	mkdir -p "$dir"
 	cd "$dir"
 	
+	# Get the repo
 	get_repo "$url" "$name"
 
+	# What's it named?
 	reponame = `ls`
 	cd ..
 	
@@ -123,29 +127,47 @@ parse_url_handler() {
 	# The <url> parameter
 	url="$1"
 	
+	# What's the prefix? (`gist:`, `git:`, `balrog:`, `sauron:`)
 	prefix=`echo $url | cut -d':' -f 1`
 
 	if [[ $prefix == gist ]] ; then
+		# Prefix is gist
+		# Get the Gist ID
 		gistid=`echo $url | cut -d':' -f 2`
+		# Parse the Gist ID into a url
 		giturl=`parse_gist "$gistid"`
+		# 'Return' the Git url 
 		echo "git&$giturl"
 		return
 	elif [[ $prefix == git ]] ; then
+		# Prefix is git
+		# Get the Git URL
 		giturl=`cut_after "$url" ":" "end"`
+		# 'Return' the Git url
 		echo "git&$giturl"
 		return
 	elif [[ $prefix == sauron ]] ; then
+		# The prefix is sauron
+		# Set the Git url to the Sauron repo url
 		giturl='https://github.com/ArchimedesPi/sauron.git'
+		# What package?
 		package=`echo $url | cut -d':' -f 2`
+		# 'Return' as a Balrog
 		echo "balrog&$giturl^$package"
 		return
 	elif [[ $prefix == balrog ]] ; then
+		# The prefix is balrog
+		# Get Git url, it's after ':'
 		giturl=`cut_after "$url" ":" "end"`
+		# Strip out the package, it's after '@'
 		giturl=`echo $giturl | cut -d'@' -f 1`
+		# Get the package name
 		package=`echo $url | cut -d'@' -f 2`
+		# 'Return' as a Balrog
 		echo "balrog&$giturl^$package"
 		return
 	else
+		# Uh-oh. This happens if your fingers are numb and can't type properly...
   		errorz "OOOPS! I don't recognize that!"
 		file_issue
 	fi
@@ -161,21 +183,37 @@ directory_exists() {
 	fi
 }
 
+# Get the name of a git repo from a URL
+git_repo_name() {
+	url="$1"
+	echo `basename "$url" .git`
+}
+
 # Fancily named wrapper for directory_exists()
 check_balrog_installed() {
 	location="$1"
 	echo `directory_exists "$location"`
 }
 
+# Fancily named wrapper for git_repo_name
+balrog_name() {
+	url="$1"
+	echo `git_repo_name "$url"`
+}
+
 # Process a parsed URL
 # This is the meat of Mordor!
 process_parsed_url() {
 	infoz "Processing parsed URL..."
+	# What prefix (`git&` or `balrog&`)
 	case $prefix in
 	("git")
+		# Git prefix!
 		infoz "Normal Git repo / Github gist"
+		# What's our URL?
 		git_url=`cut_after "$parsed_url" "&" "end"`
 		infoz "Fetching from Git ($git_url)"
+		# Fetch! BTW put it in .mordor/
 		location=`git_fetch "$git_url" "" ".mordor"`
 		infoz "Found Orcfile!"
 		install_package "$location" "Orcfile"
@@ -192,7 +230,7 @@ process_parsed_url() {
 		is_balrog_installed=`check_balrog_installed $git_url`
 		# Do different things if the Balrog's there or not.
 		if !is_balrog_installed; then
-			# Fetch our Balrog!
+			# Fetch our Balrog! BTW put it in .mordor/balrogs
 			location=`git_fetch "$git_url" "" ".mordor/balrogs"`
 		else
 			# What's the Balrog's name?
