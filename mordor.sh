@@ -75,10 +75,9 @@ cut_after() {
 get_repo() {
 	# Our url
 	url="$1"
-	# Where does it go / what is is named?
-	#name="$2"
 
 	####GIT it####
+	# Redirect output to /dev/null !!!
 	git clone "$url" > /dev/null 2>&1
 
 }
@@ -87,15 +86,12 @@ get_repo() {
 git_fetch() {
 	# Repo
 	url="$1"
-	# Name to clone to
-	#name="$2"
 	# Directory to save to
-	dir="$3"
+	dir="$2"
 
 	# Make a new directory to put it in!
 	mkdir -p "$dir"
 	pushd "$dir" > /dev/null
-	#cd "$dir"
 	
 	# Get the repo
 
@@ -103,9 +99,8 @@ git_fetch() {
 
 	# What's it named?
 	reponame=`basename "$url" .git`
-	#infoz "DEBUG $url $reponame $dir"
+
 	popd > /dev/null
-	#cd ..
 	
 	echo "$dir/$reponame"
 }
@@ -177,27 +172,12 @@ parse_url_handler() {
 	fi
 }
 
-# Check if a directory exists
-#directory_exists() {
-#	location="$1"
-#	if [ -d location ]; then
-#		echo true;
-#	else
-#		echo false;
-#	fi
-#}
 
 # Get the name of a git repo from a URL
 git_repo_name() {
 	url="$1"
 	echo `basename "$url" .git`
 }
-
-# Fancily named wrapper for directory_exists()
-#check_balrog_installed() {
-#	location="$1"
-#	echo `directory_exists "$location"`
-#}
 
 # Fancily named wrapper for git_repo_name
 balrog_name() {
@@ -232,7 +212,7 @@ process_parsed_url() {
 			# Fetch the repo
 			infoz "Fetching from Git $(tput setaf 2)($git_url)$(tput sgr 0)"
 			# Fetch! BTW put it in .mordor/
-			location=`git_fetch "$git_url" "" ".mordor"`
+			location=`git_fetch "$git_url" ".mordor"`
 			infoz "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
 		else
 			# Where's the repo?
@@ -264,7 +244,7 @@ process_parsed_url() {
 		if [[ ! -d ".mordor/$balrog_name" ]]; then
 			# Fetch our Balrog! BTW put it in .mordor/balrogs
 			infoz "Fetching Balrog!"
-			location=`git_fetch "$git_url" "" ".mordor/balrogs"`
+			location=`git_fetch "$git_url" ".mordor/balrogs"`
 		else
 			# What's the Balrog's name?
 			infoz "This Balrog is named \"$balrog_name\""
@@ -298,11 +278,9 @@ install_package() {
 	infoz "Installing package..."
 	# Path to folder with Orcfile
 	location="$1"
-	#infoz "Location: $location"
 
 	# Filename
 	filename="$2"
-	#infoz "Orcfile: $filename"
 
 	# Combine the location and the filename!
 	orcfile="$location/$filename"
