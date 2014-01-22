@@ -346,8 +346,11 @@ install_package() {
 
 			infoz "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE INSTALLING DEPENDANCY!!!$(tput sgr 0)"
 		done
-	else
+	elif [[ ${#dependancies[@]} -eq 0 ]]; then
 		infoz "$(tput setaf 4)Nothing!$(tput sgr 0)"
+	else
+		errorz "Uh-oh. This shouldn't happen! Error in install_package()! Error #14!"
+		file_issue
 	fi
 
 	# Do it.
