@@ -5,7 +5,7 @@
 #name:i-am-a-package;
 #description:I have stuff;
 #version:3.141;
-#dependancies:foobar;
+#dependancies:sauron@foobar sauron@teddybear;
 ````
 
 Each `#<tag>:` is the tag, and everything after that before ; is the content.

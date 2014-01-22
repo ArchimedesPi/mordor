@@ -10,13 +10,13 @@
 
 # Prints stuff about filing an issue at Github
 file_issue() {
-	echo >&2 "If you deem this a big deal, *please file an issue* at"
-	echo >&2 "https://github.com/ArchimedesPi/mordor/issues"
+	echo >&2 "$(tput setaf 1)If you deem this a big deal, *please file an issue* at"
+	echo >&2 "https://github.com/ArchimedesPi/mordor/issues$(tput sgr 0)"
 }
 
 # Print an INFO message
 infoz() {
-	message="[INFO]: $1"
+	message="$(tput setaf 2)[INFO]:$(tput sgr 0) $1"
 	echo $message
 }
 
@@ -79,7 +79,7 @@ get_repo() {
 	#name="$2"
 
 	####GIT it####
-	git clone "$url" #"$name"
+	git clone "$url" > /dev/null 2>&1
 
 }
 
@@ -94,14 +94,18 @@ git_fetch() {
 
 	# Make a new directory to put it in!
 	mkdir -p "$dir"
-	cd "$dir"
+	pushd "$dir" > /dev/null
+	#cd "$dir"
 	
 	# Get the repo
-	get_repo "$url" #"$name"
+
+	get_repo $url
 
 	# What's it named?
-	reponame = `ls`
-	cd ..
+	reponame=`basename "$url" .git`
+	#infoz "DEBUG $url $reponame $dir"
+	popd > /dev/null
+	#cd ..
 	
 	echo "$dir/$reponame"
 }
@@ -174,14 +178,14 @@ parse_url_handler() {
 }
 
 # Check if a directory exists
-directory_exists() {
-	location="$1"
-	if [ -d location ]; then
-		echo true;
-	else
-		echo false;
-	fi
-}
+#directory_exists() {
+#	location="$1"
+#	if [ -d location ]; then
+#		echo true;
+#	else
+#		echo false;
+#	fi
+#}
 
 # Get the name of a git repo from a URL
 git_repo_name() {
@@ -190,15 +194,23 @@ git_repo_name() {
 }
 
 # Fancily named wrapper for directory_exists()
-check_balrog_installed() {
-	location="$1"
-	echo `directory_exists "$location"`
-}
+#check_balrog_installed() {
+#	location="$1"
+#	echo `directory_exists "$location"`
+#}
 
 # Fancily named wrapper for git_repo_name
 balrog_name() {
-	url="$1"
-	echo `git_repo_name "$url"`
+	name="$1"
+	echo `git_repo_name "$name"`
+}
+
+# Do a git pull on a Git repo
+git_pull() {
+	location="$1"
+	pushd "$location" > /dev/null
+	git pull
+	popd > /dev/null
 }
 
 # Process a parsed URL
@@ -212,10 +224,26 @@ process_parsed_url() {
 		infoz "Normal Git repo / Github gist"
 		# What's our URL?
 		git_url=`cut_after "$parsed_url" "&" "end"`
-		infoz "Fetching from Git ($git_url)"
-		# Fetch! BTW put it in .mordor/
-		location=`git_fetch "$git_url" "" ".mordor"`
+		# What's the name of the Git repo?
+		repo_name=`git_repo_name "$git_url"`
+		infoz "This repo is named: $(tput setaf 2)$repo_name$(tput sgr 0)"
+		# Check if it's downloaded already...
+		if [[ ! -d ".mordor/$repo_name" ]]; then
+			# Fetch the repo
+			infoz "Fetching from Git $(tput setaf 2)($git_url)$(tput sgr 0)"
+			# Fetch! BTW put it in .mordor/
+			location=`git_fetch "$git_url" "" ".mordor"`
+			infoz "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
+		else
+			# Where's the repo?
+			location=".mordor/$repo_name"
+			infoz "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
+			infoz "Updating repo..."
+			git_pull $location
+		fi
+
 		infoz "Found Orcfile!"
+		infoz "in directory $location"
 		install_package "$location" "Orcfile.sh"
 		
 		;;
@@ -230,21 +258,19 @@ process_parsed_url() {
 		# What package does the user want?
 		package=`echo $postfix | cut -d'^' -f 2`
 		infoz "Selecting package \`$package\`"
+		# What's the Balrog's name?
+		balrog_name=`balrog_name "$git_url"`
 		# Check if the Balrog is already downloaded! Make sure it's not hiding/lurking around a corner (;
-		is_balrog_installed=`check_balrog_installed $git_url`
-		infoz "The Balrog is installed: $is_balrog_installed"
-		# Do different things if the Balrog's there or not.
-		if !is_balrog_installed; then
+		if [[ ! -d ".mordor/$balrog_name" ]]; then
 			# Fetch our Balrog! BTW put it in .mordor/balrogs
 			infoz "Fetching Balrog!"
 			location=`git_fetch "$git_url" "" ".mordor/balrogs"`
 		else
 			# What's the Balrog's name?
-			balrog_name=`balrog_name "$git_url"`
 			infoz "This Balrog is named \"$balrog_name\""
 			# Where is it hiding?
 			location=".mordor/$balrog_name"
-			infoz "The balrog is in $location"
+			infoz "The Balrog is in $location"
 			# Make sure the Balrog is up to date!
 			infoz "Updating Balrog..."
 			git_pull "$location"
@@ -269,11 +295,64 @@ process_parsed_url() {
 # The Moste Importante Bitte
 # install_package is *recursive*, that is, it looks at a package, checks dependancies, and calls itself on those dependancies!
 install_package() {
-	# Path to Orcfile
+	infoz "Installing package..."
+	# Path to folder with Orcfile
 	location="$1"
+	#infoz "Location: $location"
 
-	name=`head --lines=10 | "$location" | grep -oP "(?<=<sometag param=').*?(?='>)"
+	# Filename
+	filename="$2"
+	#infoz "Orcfile: $filename"
 
+	# Combine the location and the filename!
+	orcfile="$location/$filename"
+	infoz "Orcfile location: $(tput setaf 2)$(tput setab 5)$orcfile$(tput sgr 0)"
+
+	# What's the package name?
+	name=`head --lines=10 "$orcfile" | grep -oP "(?<=#name:).*?(?=;)"`
+	infoz "Package name: $(tput setaf 4)$name$(tput sgr 0)"
+
+	# What's the package description?
+	description=`head --lines=10 "$orcfile" | grep -oP "(?<=#description:).*?(?=;)"`
+	infoz "Package description: $(tput setaf 4)$description$(tput sgr 0)"
+
+	# What version of the package?
+	version=`head --lines=10 "$orcfile" | grep -oP "(?<=#version:).*?(?=;)"`
+	infoz "Package version: $(tput setaf 4)$version$(tput sgr 0)"
+
+	# What packages does this package depend on?
+	dependancies=`head --lines 10 "$orcfile" | grep -oP "(?<=#dependancies:).*?(?=;)"`
+
+	if [[ ! ${#dependancies[@]} -eq 0 ]]; then
+		# We have dependancies!
+
+		infoz "This package depends on:"
+		for dependancy in ${dependancies[@]}; do
+			infoz "${dependancy}"
+		done
+
+		for dependancy in ${dependancies[@]}; do
+			infoz "Installing dependancy ${dependancy}"
+
+			parsed_url_dependancy_=`parse_url_handler "${dependancy}"`
+			infoz "Parsed URL to $(tput setaf 6)$parsed_url_dependancy_$(tput sgr 0)"
+
+			# Get the prefix (everything before &)
+			prefix_dependancy_=`echo $parsed_url_dependancy_ | cut -d'&' -f 1`
+			infoz "Prefixed with $(tput setaf 6)$prefix_dependancy_$(tput sgr 0)"
+
+			# OK, now process *that*...
+			process_parsed_url parsed_url_dependancy_ prefix_dependancy_
+
+			infoz "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE INSTALLING DEPENDANCY!!!$(tput sgr 0)"
+		done
+	else
+		infoz "$(tput setaf 4)Nothing!$(tput sgr 0)"
+	fi
+
+	# Do it.
+	# Just do it.
+	source "$orcfile"
 }
 
 # The program!
@@ -283,11 +362,13 @@ url="$1"
 
 # Parse it
 parsed_url=`parse_url_handler "$url"`
-infoz "Parsed URL to $parsed_url"
+infoz "Parsed URL to $(tput setaf 6)$parsed_url$(tput sgr 0)"
 
 # Get the prefix (everything before &)
 prefix=`echo $parsed_url | cut -d'&' -f 1`
-infoz "Prefixed with $prefix"
+infoz "Prefixed with $(tput setaf 6)$prefix$(tput sgr 0)"
 
 # OK, now process *that*...
 process_parsed_url parsed_url prefix
+
+infoz "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE!!!$(tput sgr 0)"
