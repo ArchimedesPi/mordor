@@ -219,11 +219,13 @@ process_parsed_url() {
 			location=".mordor/$repo_name"
 			infoz "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
 			infoz "Updating repo..."
+			# Pull it!
 			git_pull $location
 		fi
 
 		infoz "Found Orcfile!"
 		infoz "in directory $location"
+		# Install the package
 		install_package "$location" "Orcfile.sh"
 		
 		;;
@@ -300,11 +302,13 @@ install_package() {
 
 	# What packages does this package depend on?
 	dependancies=`head --lines 10 "$orcfile" | grep -oP "(?<=#dependancies:).*?(?=;)"`
+	dependancies=($dependancies)
 
+	# Let the user know that...
+	infoz "This package depends on:"
 	if [[ ! ${#dependancies[@]} -eq 0 ]]; then
 		# We have dependancies!
 
-		infoz "This package depends on:"
 		for dependancy in ${dependancies[@]}; do
 			infoz "${dependancy}"
 		done
@@ -325,8 +329,10 @@ install_package() {
 			infoz "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE INSTALLING DEPENDANCY!!!$(tput sgr 0)"
 		done
 	elif [[ ${#dependancies[@]} -eq 0 ]]; then
+		# We don't have dependancies!
 		infoz "$(tput setaf 4)Nothing!$(tput sgr 0)"
 	else
+		# Something's wrong. :(
 		errorz "Uh-oh. This shouldn't happen! Error in install_package()! Error #14!"
 		file_issue
 	fi
