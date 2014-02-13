@@ -1,12 +1,12 @@
 ## Mordor is simple/stupid. All it does is 
-	* Install itself
+* Install itself
 ## Then you can
-	* Install software (really git clone a sh script and run it)
-	* Parse dependancies from that script
-	* Install ALL the dependancies!
-	* And the software - don't forget that
+* Install software (really git clone a sh script and run it)
+* Parse dependancies from that script
+* Install ALL the dependancies!
+* And the software - don't forget that
 ## The command line syntax is:
-### > mordor <url> [...]
+### `> mordor <url> [...]`
 ## where
 ###	+ <url> is a URL to a git repo containing a file `Orcfile`.
 ####		+ <url> can be:
