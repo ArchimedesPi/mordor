@@ -7,14 +7,14 @@
 * And the software - don't forget that
 ## The command line syntax is:
 ### `> mordor <url> [...]`
-## where
-###	+ <url> is a URL to a git repo containing a file `Orcfile`.
-####		+ <url> can be:
-#####		|______ + `gist:<gitid>` Enter a gist ID, the gist should contain an Orcfile
-#####		|______ + `git:<url>`	URL to a git repo, `git://` or `ssh://` or `https://` should work!
-#####		|______ + `sauron:<packagename>` Get <packagename> from Sauron
-#####		|______ + `balrog:<url>@<packagename>` Get <packagename> from git repo <url>
-###	+ The rest of the arguments are passed to the Orcfile
+## where <br/>
+###	+ <url> is a URL to a git repo containing a file `Orcfile`.<br/>
+####		+ <url> can be:<br/>
+#####		|______ + `gist:<gitid>` Enter a gist ID, the gist should contain an Orcfile<br/>
+#####		|______ + `git:<url>`	URL to a git repo, `git://` or `ssh://` or `https://` should work!<br/>
+#####		|______ + `sauron:<packagename>` Get <packagename> from Sauron<br/>
+#####		|______ + `balrog:<url>@<packagename>` Get <packagename> from git repo <url><br/>
+###	+ The rest of the arguments are passed to the Orcfile<br/>
 
 # *Run it in the same directory each time if you want script caching!!!*
 
