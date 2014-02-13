@@ -4,7 +4,6 @@ before_install:
   - sudo apt-get update
   
 install:
-  - sudo apt-get upgrade
   - curl -L https://github.com/sstephenson/bats/archive/v0.3.1.tar.gz | tar zx
   - sudo ./bats-0.3.1/install.sh /usr/local
 
