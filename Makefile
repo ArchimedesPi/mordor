@@ -20,4 +20,4 @@ uninstall:
 test:
 	echo "Starting tests!"
 	# For temporary testing, let's just return sucess!
-	return true
+	exit 0
