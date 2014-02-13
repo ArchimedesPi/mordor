@@ -23,3 +23,8 @@ uninstall:
   rm -rfv /usr/mordor
   
   rm -rfv /usr/bin/mordor
+
+test:
+	echo "Starting tests!"
+	# For temporary testing, let's just return sucess!
+	return true
