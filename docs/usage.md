@@ -5,8 +5,8 @@
 * Parse dependancies from that script
 * Install ALL the dependancies!
 * And the software - don't forget that
-## The command line syntax is:
-### `> mordor <url> [...]`
+## The command line syntax is:<br/>
+### `> mordor <url> [...]`<br/>
 ## where <br/>
 ###	+ <url> is a URL to a git repo containing a file `Orcfile`.<br/>
 ####		+ <url> can be:<br/>
@@ -15,8 +15,3 @@
 #####		|______ + `sauron:<packagename>` Get <packagename> from Sauron<br/>
 #####		|______ + `balrog:<url>@<packagename>` Get <packagename> from git repo <url><br/>
 ###	+ The rest of the arguments are passed to the Orcfile<br/>
-
-# *Run it in the same directory each time if you want script caching!!!*
-
-##   That's all,
-#	ArchimedesPi
