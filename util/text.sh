@@ -1,6 +1,7 @@
 # Text manipulation tools
 
 # Everything-After cutter
+# cut_after 'abc:def' ':' 'lol-im-an-error'
 cut_after() {
 	# Our string
 	str="$1"
@@ -32,13 +33,13 @@ cut_after() {
 			;;
 		(*)
 			gh_issue_info
-			onoes "Incorrect positional call to cut_after()"
-			onoes "Call was:"
-			onoes "		cut_after $str $del $pos"
-			onoes "__________________________|"
+			onoe "Incorrect positional call to cut_after()"
+			onoe "Call was:"
+			onoe "		cut_after $str $del $pos"
+			onoe "__________________________|"
 			echo
 			_hr '!'
-			exit 1
+			#exit 1
 			;;
 	esac
 }

@@ -19,7 +19,7 @@ onoe() {
 gh_issue_info() {
 	echo >&2 "$(tput setaf 1)An issue can be filed at"
 	echo >&2 "https://github.com/ArchimedesPi/mordor/issues"
-	echo >&2 "Please check existing issues, and include the following data:$(tput sgr 0)"
+	echo >&2 "Please check existing issues, and include the following data in your issue:$(tput sgr 0)"
 }
 
 # Thanks Gil Gonçalves!
