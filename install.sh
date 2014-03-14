@@ -47,7 +47,7 @@ cp mordor.sh "$INSTALLPREFIX/bin/mordor"
 chmod +x "$INSTALLPREFIX/bin/mordor"
 
 ohai 'Adding mordor to $PATH'
-PATHCMD="export PATH=PATH:$INSTALLPREFIX/bin"
+PATHCMD="export PATH=\$PATH:$INSTALLPREFIX/bin"
 
 if grep -q "$PATHCMD" "$HOME/.profile"; then
 	:

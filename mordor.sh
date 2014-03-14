@@ -8,68 +8,6 @@
 # Feel free to do pull requests, I'm *very* likely to merge them (:
 # So fork, add your cool bell/whistle, pull request, and see that same bell/whistle upstream!
 
-# Prints stuff about filing an issue at Github
-file_issue() {
-	echo >&2 "$(tput setaf 1)If you deem this a big deal, *please file an issue* at"
-	echo >&2 "https://github.com/ArchimedesPi/mordor/issues$(tput sgr 0)"
-}
-
-# Print an INFO message
-infoz() {
-	message="$(tput setaf 2)[INFO]:$(tput sgr 0) $1"
-	echo $message
-}
-
-# Print an ERROR message
-errorz() {
-	message="[ERROR]: $1"
-	echo >&2 $message
-}
-
-#Print a WARNING message
-warningz() {
-	message="[WARNING]: $1"
-	echo $message
-}
-
-# Everything-After cutter
-cut_after() {
-	# Our string
-	str="$1"
-	# Our delimiter
-	del="$2"
-	# Which end?
-	# front *or* end
-	pos="$3"
-
-	# Split *all* the things!
-	case $str in
-  		(*"$sep"*)
-    			front=${str%%"$del"*}
-    			end=${str#*"$del"}
-    			;;
-  		(*)
-    			front=$str
-    			end=
-    			;;
-	esac
-	
-	# Which end?
-	case $pos in
-		("front")
-			echo "$front"
-			;;
-		("end")
-			echo "$end"
-			;;
-		(*)
-			errorz "Incorrect positional call to cut_after() !!!"
-			file_issue
-			exit 1
-			;;
-	esac
-}
-
 
 # Get a repo from git!
 get_repo() {

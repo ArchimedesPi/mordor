@@ -15,6 +15,13 @@ onoe() {
 	echo "`_fg_red``_style_bold`==> `_sgrnaught`$1"
 }
 
+# Prints stuff about filing an issue at Github
+gh_issue_info() {
+	echo >&2 "$(tput setaf 1)An issue can be filed at"
+	echo >&2 "https://github.com/ArchimedesPi/mordor/issues"
+	echo >&2 "Please check existing issues, and include the following data:$(tput sgr 0)"
+}
+
 # Thanks Gil Gonçalves!
 
 # The MIT License (MIT)
