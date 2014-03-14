@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # This is Mordor, the simplistic package manager
 # See the docs/ folder for more info
 # You'll probably want to try Sauron first in most cases. He's the king! (;

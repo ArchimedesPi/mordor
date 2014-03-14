@@ -1,9 +1,10 @@
+#!/usr/bin/env bash
 # Install script for Mordor
 
 INSTALLPREFIX='/opt/mordor'
-VARPREFIX='/var/mordor'
 
 # Import libraries
+. util/colors.sh
 . util/messaging.sh
 . util/files.sh
 
@@ -11,7 +12,6 @@ echo '=== Installing Mordor ==='
 echo
 echo
 ohai "Installing to $INSTALLPREFIX"
-ohai "Settings @ $VARPREFIX"
 ohai "Installation user: $USER"
 echo
 if [ ! -d $INSTALLPREFIX ]; then
@@ -19,12 +19,6 @@ if [ ! -d $INSTALLPREFIX ]; then
 	ohai "Creating $INSTALLPREFIX"
 	sudo mkdir $INSTALLPREFIX
 	sudo chown $USER $INSTALLPREFIX
-fi
-
-if [ ! -d $VARPREFIX ]; then
-	opoo "$VARPREFIX does not exist"
-	ohai "Creating $VARPREFIX"
-	sudo mkdir $VARPREFIX
 fi
 
 if [ ! -w $INSTALLPREFIX ]; then
@@ -43,3 +37,29 @@ fi
 
 ohai "Copying bash utility libraries"
 cp util/* "$INSTALLPREFIX/util"
+
+if [ ! -d "$INSTALLPREFIX/bin" ]; then
+	o_mkdir "$INSTALLPREFIX/bin"
+fi
+
+ohai "Copying mordor.sh"
+cp mordor.sh "$INSTALLPREFIX/bin/mordor"
+chmod +x "$INSTALLPREFIX/bin/mordor"
+
+ohai 'Adding mordor to $PATH'
+PATHCMD="export PATH=PATH:$INSTALLPREFIX/bin"
+
+if grep -q "$PATHCMD" "$HOME/.profile"; then
+	:
+else
+	echo $PATHCMD >> $HOME/.profile
+fi
+
+if grep -q "$PATHCMD" "$HOME/.bashrc"; then
+	:
+else
+	echo $PATHCMD >> $HOME/.bashrc
+fi
+
+ohai 'Install done.'
+_hr '.'
