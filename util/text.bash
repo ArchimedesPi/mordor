@@ -4,22 +4,22 @@
 # cut_after 'abc:def' ':' 'lol-im-an-error'
 cut_after() {
 	# Our string
-	str="$1"
+	local str="$1"
 	# Our delimiter
-	del="$2"
+	local del="$2"
 	# Which end?
 	# front *or* end
-	pos="$3"
+	local pos="$3"
 
 	# Split *all* the things!
 	case $str in
   		(*"$sep"*)
-    			front=${str%%"$del"*}
-    			end=${str#*"$del"}
+    			local front=${str%%"$del"*}
+    			local end=${str#*"$del"}
     			;;
   		(*)
-    			front=$str
-    			end=
+    			local front=$str
+    			local end=
     			;;
 	esac
 	

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # Install script for Mordor
 
-INSTALLPREFIX='/opt/mordor'
+INSTALLPREFIX='/usr/local/mordor'
 
 # Import libraries
-. util/colors.sh
-. util/messaging.sh
-. util/files.sh
+. util/colors.bash
+. util/messaging.bash
+. util/files.bash
 
 echo '=== Installing Mordor ==='
 echo
@@ -43,7 +43,7 @@ if [ ! -d "$INSTALLPREFIX/bin" ]; then
 fi
 
 ohai "Copying mordor.sh"
-cp mordor.sh "$INSTALLPREFIX/bin/mordor"
+cp bin/mordor.sh "$INSTALLPREFIX/bin/mordor"
 chmod +x "$INSTALLPREFIX/bin/mordor"
 
 ohai 'Adding mordor to $PATH'

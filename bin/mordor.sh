@@ -8,56 +8,43 @@
 # Feel free to do pull requests, I'm *very* likely to merge them (:
 # So fork, add your cool bell/whistle, pull request, and see that same bell/whistle upstream!
 
+############################
+### Bootstrap the script ###
+############################
 
-# Get a repo from git!
-get_repo() {
-	# Our url
-	url="$1"
-
-	####GIT it####
-	# Redirect output to /dev/null !!!
-	git clone "$url" > /dev/null 2>&1
-
-}
-
-# Wrapper for get_repo()
-git_fetch() {
-	# Repo
-	url="$1"
-	# Directory to save to
-	dir="$2"
-
-	# Make a new directory to put it in!
-	mkdir -p "$dir"
-	pushd "$dir" > /dev/null
-	
-	# Get the repo
-
-	get_repo $url
-
-	# What's it named?
-	reponame=`basename "$url" .git`
-
+# Patch in some *possibly desynchronized* functions from `files`
+# We'll overwrite them with (possibly up-to-date) versions later
+absolute_file_containingdir() {
+	local dirty_path="$1"
+	pushd `dirname $dirty_path` > /dev/null
+	local enclosing_dir_path=`pwd -P`
 	popd > /dev/null
-	
-	echo "$dir/$reponame"
+
+	echo "$enclosing_dir_path"
 }
 
+absolute_path() {
+	local dirty_path="$1"
+	pushd "$dirty_path" > /dev/null
+	local clean_path=`pwd -P`
+	popd > /dev/null
 
-# Parse a Gist url
-# parse_gist <id>
-parse_gist() {
-	# The gist ID
-	id="$1"
-
-	# Example gist structure: https://gist.github.com/7781902.git
-	# For the gist https://gist.github.com/ArchimedesPi/7781902
-
-	# So it's really simple:
-	
-	git_url="https://gist.github.com/$id.git"
-	echo "$git_url"
+	echo "$clean_path"
 }
+
+##############################
+### Load all the libraries ###
+##############################
+BASEDIR=`absolute_file_containingdir $0`
+SCRIPTDIR=`absolute_path "$BASEDIR/../util"`
+
+# Just source in all the libraries we need
+. $SCRIPTDIR/colors.bash
+. $SCRIPTDIR/messaging.bash
+. $SCRIPTDIR/text.bash
+. $SCRIPTDIR/files.bash
+. $SCRIPTDIR/url.bash
+. $SCRIPTDIR/git.bash
 
 # Called on the <url> parameter
 parse_url_handler() {
@@ -105,17 +92,11 @@ parse_url_handler() {
 		return
 	else
 		# Uh-oh. This happens if your fingers are numb and can't type properly...
-  		errorz "OOOPS! I don't recognize that!"
+  		onoe "OOOPS! I don't recognize that!"
 		file_issue
 	fi
 }
 
-
-# Get the name of a git repo from a URL
-git_repo_name() {
-	url="$1"
-	echo `basename "$url" .git`
-}
 
 # Fancily named wrapper for git_repo_name
 balrog_name() {
@@ -123,76 +104,68 @@ balrog_name() {
 	echo `git_repo_name "$name"`
 }
 
-# Do a git pull on a Git repo
-git_pull() {
-	location="$1"
-	pushd "$location" > /dev/null
-	git pull
-	popd > /dev/null
-}
-
 # Process a parsed URL
 # This is a big deal - It's the first part that *does things*!
 process_parsed_url() {
-	infoz "Processing parsed URL..."
+	ohai "Processing parsed URL..."
 	# What prefix (`git&` or `balrog&`)
 	case $prefix in
 	("git")
 		# Git prefix!
-		infoz "Normal Git repo / Github gist"
+		ohai "Normal Git repo / Github gist"
 		# What's our URL?
 		git_url=`cut_after "$parsed_url" "&" "end"`
 		# What's the name of the Git repo?
 		repo_name=`git_repo_name "$git_url"`
-		infoz "This repo is named: $(tput setaf 2)$repo_name$(tput sgr 0)"
+		ohai "This repo is named: $(tput setaf 2)$repo_name$(tput sgr 0)"
 		# Check if it's downloaded already...
 		if [[ ! -d ".mordor/$repo_name" ]]; then
 			# Fetch the repo
-			infoz "Fetching from Git $(tput setaf 2)($git_url)$(tput sgr 0)"
+			ohai "Fetching from Git $(tput setaf 2)($git_url)$(tput sgr 0)"
 			# Fetch! BTW put it in .mordor/
 			location=`git_fetch "$git_url" ".mordor"`
-			infoz "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
+			ohai "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
 		else
 			# Where's the repo?
 			location=".mordor/$repo_name"
-			infoz "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
-			infoz "Updating repo..."
+			ohai "The repo is in $(tput setaf 6)$location$(tput sgr 0)"
+			ohai "Updating repo..."
 			# Pull it!
 			git_pull $location
 		fi
 
-		infoz "Found Orcfile!"
-		infoz "in directory $location"
+		ohai "Found Orcfile!"
+		ohai "in directory $location"
 		# Install the package
 		install_package "$location" "Orcfile.sh"
 		
 		;;
 	("balrog")
 		# It's a balrog!
-		infoz "Just a Balrog!"
+		ohai "Just a Balrog!"
 		# Get everything after `balrog&`
 		postfix=`cut_after "$parsed_url" "&" "end"`
 		# Get the repo's URL
 		git_url=`echo $postfix | cut -d'^' -f 1`
-		infoz "Balrog URL: $git_url"
+		ohai "Balrog URL: $git_url"
 		# What package does the user want?
 		package=`echo $postfix | cut -d'^' -f 2`
-		infoz "Selecting package \`$package\`"
+		ohai "Selecting package \`$package\`"
 		# What's the Balrog's name?
 		balrog_name=`balrog_name "$git_url"`
 		# Check if the Balrog is already downloaded! Make sure it's not hiding/lurking around a corner (;
 		if [[ ! -d ".mordor/$balrog_name" ]]; then
 			# Fetch our Balrog! BTW put it in .mordor/balrogs
-			infoz "Fetching Balrog!"
+			ohai "Fetching Balrog!"
 			location=`git_fetch "$git_url" ".mordor/balrogs"`
 		else
 			# What's the Balrog's name?
-			infoz "This Balrog is named \"$balrog_name\""
+			ohai "This Balrog is named \"$balrog_name\""
 			# Where is it hiding?
 			location=".mordor/$balrog_name"
-			infoz "The Balrog is in $location"
+			ohai "The Balrog is in $location"
 			# Make sure the Balrog is up to date!
-			infoz "Updating Balrog..."
+			ohai "Updating Balrog..."
 			git_pull "$location"
 		fi
 
@@ -205,7 +178,7 @@ process_parsed_url() {
 		;;
 	(*)
 		# This is only called if someone makes a coding mistake! (Me most likely...)
-		errorz "Uh-oh... There's been an internal error processing the parser prefix $prefix!"
+		onoe "Uh-oh... There's been an internal error processing the parser prefix $prefix!"
 		file_issue
 		;;
 	esac
@@ -215,7 +188,7 @@ process_parsed_url() {
 # The Moste Importante Bitte
 # install_package is *recursive*, that is, it looks at a package, checks dependancies, and calls itself on those dependancies!
 install_package() {
-	infoz "Installing package..."
+	ohai "Installing package..."
 	# Path to folder with Orcfile
 	location="$1"
 
@@ -224,54 +197,54 @@ install_package() {
 
 	# Combine the location and the filename!
 	orcfile="$location/$filename"
-	infoz "Orcfile location: $(tput setaf 2)$(tput setab 5)$orcfile$(tput sgr 0)"
+	ohai "Orcfile location: $(tput setaf 2)$(tput setab 5)$orcfile$(tput sgr 0)"
 
 	# What's the package name?
 	name=`head --lines=10 "$orcfile" | grep -oP "(?<=#name:).*?(?=;)"`
-	infoz "Package name: $(tput setaf 4)$name$(tput sgr 0)"
+	ohai "Package name: $(tput setaf 4)$name$(tput sgr 0)"
 
 	# What's the package description?
 	description=`head --lines=10 "$orcfile" | grep -oP "(?<=#description:).*?(?=;)"`
-	infoz "Package description: $(tput setaf 4)$description$(tput sgr 0)"
+	ohai "Package description: $(tput setaf 4)$description$(tput sgr 0)"
 
 	# What version of the package?
 	version=`head --lines=10 "$orcfile" | grep -oP "(?<=#version:).*?(?=;)"`
-	infoz "Package version: $(tput setaf 4)$version$(tput sgr 0)"
+	ohai "Package version: $(tput setaf 4)$version$(tput sgr 0)"
 
 	# What packages does this package depend on?
 	dependancies=`head --lines 10 "$orcfile" | grep -oP "(?<=#dependancies:).*?(?=;)"`
 	dependancies=($dependancies)
 
 	# Let the user know that...
-	infoz "This package depends on:"
+	ohai "This package depends on:"
 	if [[ ! ${#dependancies[@]} -eq 0 ]]; then
 		# We have dependancies!
 
 		for dependancy in ${dependancies[@]}; do
-			infoz "${dependancy}"
+			ohai "${dependancy}"
 		done
 
 		for dependancy in ${dependancies[@]}; do
-			infoz "Installing dependancy ${dependancy}"
+			ohai "Installing dependancy ${dependancy}"
 
 			parsed_url_dependancy_=`parse_url_handler "${dependancy}"`
-			infoz "Parsed URL to $(tput setaf 6)$parsed_url_dependancy_$(tput sgr 0)"
+			ohai "Parsed URL to $(tput setaf 6)$parsed_url_dependancy_$(tput sgr 0)"
 
 			# Get the prefix (everything before &)
 			prefix_dependancy_=`echo $parsed_url_dependancy_ | cut -d'&' -f 1`
-			infoz "Prefixed with $(tput setaf 6)$prefix_dependancy_$(tput sgr 0)"
+			ohai "Prefixed with $(tput setaf 6)$prefix_dependancy_$(tput sgr 0)"
 
 			# OK, now process *that*...
 			process_parsed_url parsed_url_dependancy_ prefix_dependancy_
 
-			infoz "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE INSTALLING DEPENDANCY!!!$(tput sgr 0)"
+			ohai "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE INSTALLING DEPENDANCY!!!$(tput sgr 0)"
 		done
 	elif [[ ${#dependancies[@]} -eq 0 ]]; then
 		# We don't have dependancies!
-		infoz "$(tput setaf 4)Nothing!$(tput sgr 0)"
+		ohai "$(tput setaf 4)Nothing!$(tput sgr 0)"
 	else
 		# Something's wrong. :(
-		errorz "Uh-oh. This shouldn't happen! Error in install_package()! Error #14!"
+		onoe "Uh-oh. This shouldn't happen! Error in install_package()! Error #14!"
 		file_issue
 	fi
 
@@ -287,13 +260,13 @@ url="$1"
 
 # Parse it
 parsed_url=`parse_url_handler "$url"`
-infoz "Parsed URL to $(tput setaf 6)$parsed_url$(tput sgr 0)"
+ohai "Parsed URL to $(tput setaf 6)$parsed_url$(tput sgr 0)"
 
 # Get the prefix (everything before &)
 prefix=`echo $parsed_url | cut -d'&' -f 1`
-infoz "Prefixed with $(tput setaf 6)$prefix$(tput sgr 0)"
+ohai "Prefixed with $(tput setaf 6)$prefix$(tput sgr 0)"
 
 # OK, now process *that*...
 process_parsed_url parsed_url prefix
 
-infoz "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE!!!$(tput sgr 0)"
+ohai "$(tput smso)$(tput smul)$(tput rev)$(tput setaf 0)$(tput setab 7)DONE!!!$(tput sgr 0)"
