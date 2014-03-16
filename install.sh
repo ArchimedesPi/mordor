@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Install script for Mordor
-
-INSTALLPREFIX='/usr/local/mordor'
+INSTALLPREFIX="$1"
+if [ -z "$1" ]; then
+	INSTALLPREFIX='/usr/local/mordor'
+fi
 
 # Import libraries
 . util/colors.bash
