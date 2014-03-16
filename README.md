@@ -2,4 +2,14 @@
 mordor
 =======
 
-One package manager to rule them *ALL*!!!
+One package manager to rule them *ALL*
+
+
+Installation
+============
+
+````bash
+git clone https://github.com/ArchimedesPi/mordor.git
+cd mordor
+./install.sh
+````
