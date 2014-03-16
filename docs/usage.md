@@ -1,17 +1,26 @@
-## Mordor is simple/stupid. All it does is 
-* Install itself
-## Then you can
-* Install software (really git clone a sh script and run it)
-* Parse dependancies from that script
-* Install ALL the dependancies!
-* And the software - don't forget that
+## Mordor is very simple
+*Disclaimer: this is sort of a TODO reference of what I want to accomplish with the command line options*
+
 ## The command line syntax is:<br/>
-### `> mordor <url> [...]`<br/>
-## where <br/>
-###	+ <url> is a URL to a git repo containing a file `Orcfile`.<br/>
-####		+ <url> can be:<br/>
-#####		|______ + `gist:<gitid>` Enter a gist ID, the gist should contain an Orcfile<br/>
-#####		|______ + `git:<url>`	URL to a git repo, `git://` or `ssh://` or `https://` should work!<br/>
-#####		|______ + `sauron:<packagename>` Get <packagename> from Sauron<br/>
-#####		|______ + `balrog:<url>@<packagename>` Get <packagename> from git repo <url><br/>
-###	+ The rest of the arguments are passed to the Orcfile<br/>
+### `> mordor <action> <url> [options...]`<br/>
+<hr/><hr/>
+<pre>
+`<action>`
+    |_ Package Management
+    |     |_________ `install`: install a package
+    |     |_________ `remove`: remove a package
+    |     |_________ `upgrade`: upgrade a package
+    |
+    |_ Package Manager Management
+          |________ `update`: update Mordor
+          |________ `zap`: uninstall Mordor (leave cache/config)
+          |________ `slay-burn-fire`: just kill the whole deal (i.e. rm -rfv $INSTALLATION_PREFIX/mordor)
+</pre>
+<hr/>
+<pre>
+`<url>`
+  |___ `<gistid>` install from gist `gistid`
+  |___ `<giturl>$[branch]@[commit]` install from git repo `giturl`, and/or branch `branch`, and/or commit hash `commit`
+  |___ `<giturl>$[branch]@[commit]:<packagename>` same as above, but install `packagename` from that repo
+  |___ `<packagename>` pull package from sauron
+</pre>
