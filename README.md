@@ -13,3 +13,10 @@ git clone https://github.com/ArchimedesPi/mordor.git
 cd mordor
 ./install.sh
 ````
+
+Tests
+=====
+
+````bash
+bats test
+````
