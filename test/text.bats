@@ -16,3 +16,11 @@ load util/text
 #	result="$(cut_after 'abc:def' ':' 'lol-im-an-error')"
 #	[ "$result" = 'abc' ]
 #}
+
+@test "is integer: integer input" {
+	is_int 42
+}
+
+@test "is_integer: noninteger input" {
+	[ ! $(is_int "the answer to life the universe and everything") ]
+}

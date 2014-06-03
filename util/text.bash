@@ -43,3 +43,14 @@ cut_after() {
 			;;
 	esac
 }
+
+is_int() {
+	return $(test "$@" -eq "$@" > /dev/null 2>&1);
+}
+
+count_symbol() {
+	sym="$1"
+	str="$2"
+	occ=`echo "$str" | grep -F -o "$sym" | wc -l`
+	echo $occ
+} 

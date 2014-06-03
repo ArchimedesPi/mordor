@@ -19,8 +19,13 @@ echo
 if [ ! -d $INSTALLPREFIX ]; then
 	opoo "$INSTALLPREFIX does not exist"
 	ohai "Creating $INSTALLPREFIX"
-	sudo mkdir $INSTALLPREFIX
-	sudo chown $USER $INSTALLPREFIX
+	if [ -w `absolute_file_containingdir "$INSTALLPREFIX"` ]; then
+		mkdir $INSTALLPREFIX
+		chown $USER $INSTALLPREFIX
+	else
+		sudo mkdir $INSTALLPREFIX
+		sudo chown $USER $INSTALLPREFIX
+	fi
 fi
 
 if [ ! -w $INSTALLPREFIX ]; then

@@ -14,7 +14,7 @@
     |_ Package Manager Management
           |________ `update`: update Mordor
           |________ `zap`: uninstall Mordor (leave cache/config)
-          |________ `slay-burn-fire`: just kill the whole deal (i.e. rm -rfv $INSTALLATION_PREFIX/mordor)
+          |________ `slay-burn-fire-kill`: just kill the whole deal (i.e. rm -rfv $INSTALLATION_PREFIX/mordor)
 </pre>
 <hr/>
 <pre>

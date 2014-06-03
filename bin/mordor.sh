@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 # This is Mordor, the simplistic package manager
 # See the docs/ folder for more info
-# You'll probably want to try Sauron first in most cases. He's the king! (;
-# Otherwise, ring one of the Balrogs up. They'll be happy to help!
-# If none of that works, just contact the *issue tracker*. It's even more evil than Sauron (;
-# Just joking. https://github.com/ArchimedesPi/mordor/issues
 # Feel free to do pull requests, I'm *very* likely to merge them (:
 # So fork, add your cool bell/whistle, pull request, and see that same bell/whistle upstream!
 
@@ -45,6 +41,7 @@ SCRIPTDIR=`absolute_path "$BASEDIR/../util"`
 . $SCRIPTDIR/files.bash
 . $SCRIPTDIR/url.bash
 . $SCRIPTDIR/git.bash
+. $SCRIPTDIR/command.bash
 
 # Called on the <url> parameter
 parse_url_handler() {
