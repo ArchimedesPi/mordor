@@ -2,6 +2,9 @@ require 'thor'
 
 module Mordor
   class CLI < Thor
-    # Nothing to see, move along!
+    desc "zap", "Remove Mordor from this computer"
+    def zap
+      puts "I have been zapped <arrrgh!>"
+    end
   end
 end
