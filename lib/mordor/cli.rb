@@ -6,5 +6,10 @@ module Mordor
     def zap
       puts "I have been zapped <arrrgh!>"
     end
+    
+    desc "status", "Status of a package"
+    def status(package)
+      puts "This *would* have been the status of #{package}"
+    end
   end
 end
