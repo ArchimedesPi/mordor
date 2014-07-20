@@ -11,5 +11,10 @@ module Mordor
     def status(package)
       puts "This *would* have been the status of #{package}"
     end
+    
+    desc "fetch", "Fetch a package's repo to the current directory"
+    def fetch(package)
+      puts "This *would* have fetched the package #{package}"
+    end
   end
 end
