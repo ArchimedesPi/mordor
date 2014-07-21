@@ -4,7 +4,7 @@ module Mordor
   class CLI < Thor
     desc "zap", "Remove Mordor from this computer"
     def zap
-      Mordor.Zap!
+      Mordor.zap!
     end
     
     desc "status PACKAGE", "Status of a package"
