@@ -1,10 +1,11 @@
 require 'thor'
+require 'mordor'
 
 module Mordor
   class CLI < Thor
     desc "zap", "Remove Mordor from this computer"
     def zap
-      Mordor.zap!
+      Mordor.zap
     end
     
     desc "status PACKAGE", "Status of a package"
