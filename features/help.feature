@@ -6,6 +6,4 @@ Feature: Help
   
   Scenario: I need *all* the help
     When I run `mordor help`
-    Then the output should contain "help"
-    # This is temporary
-    
+    Then the output should contain "Commands:"
