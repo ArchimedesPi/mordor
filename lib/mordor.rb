@@ -1,2 +1,3 @@
 require 'mordor/version'
-require 'mordor/zap'
+require 'mordor/packages'
+require 'mordor/package'

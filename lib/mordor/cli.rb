@@ -16,12 +16,12 @@ module Mordor
     desc "fetch PACKAGE", "Fetch a package's repo to the current directory"
     def fetch(package)
       puts green { italic { "Fetching ${package}" } }
-      Mordor::Packages.by_name(package).install
+      Mordor::Packages.by_name(package).fetch(Mordor.here)
     end
 
     desc "install PACKAGE", "Install a package"
     def install(package)
-      puts "Would install the package #{package}"
+      Mordor::Packages.by_name(package).install
     end
   end
 end
