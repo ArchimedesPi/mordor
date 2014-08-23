@@ -1,4 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/archimedespi/mordor.png?label=ready)](https://waffle.io/archimedespi/mordor) [![Build Status](http://img.shields.io/travis/ArchimedesPi/mordor.svg)](https://travis-ci.org/ArchimedesPi/mordor)
+[![Stories in Ready](https://badge.waffle.io/archimedespi/mordor.png?label=ready)](https://waffle.io/archimedespi/mordor) [![Build Status](http://img.shields.io/travis/ArchimedesPi/mordor.svg)](https://travis-ci.org/ArchimedesPi/mordor)[![Code Climate](https://codeclimate.com/github/ArchimedesPi/mordor/badges/gpa.svg)](https://codeclimate.com/github/ArchimedesPi/mordor)
 mordor
 =======
 
