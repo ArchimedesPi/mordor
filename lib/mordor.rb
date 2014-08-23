@@ -1,2 +1,2 @@
-require "mordor/version"
+require 'mordor/version'
 require 'mordor/zap'

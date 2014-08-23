@@ -9,12 +9,14 @@ module Mordor
 
     desc "status PACKAGE", "Status of a package"
     def status(package)
-      puts "This *would* have been the status of #{package}"
+      puts blue { italic { "Status of #{package}" } }
+      puts Mordor::Packages.by_name(package).status.to_s
     end
 
     desc "fetch PACKAGE", "Fetch a package's repo to the current directory"
     def fetch(package)
-      puts "This *would* have fetched the package #{package}"
+      puts green { italic { "Fetching ${package}" } }
+      Mordor::Packages.by_name(package).install
     end
 
     desc "install PACKAGE", "Install a package"
