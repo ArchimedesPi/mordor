@@ -22,4 +22,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "thor"
   spec.add_dependency "term-ansicolor"
+  spec.add_dependency "multi_json"
+  spec.add_dependency "oj"
 end
