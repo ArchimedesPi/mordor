@@ -9,12 +9,13 @@ module Mordor
 
     desc "selfinstall", "Self-install Mordor once it's been gotten from RubyGems"
     def selfinstall
+
     end
 
     desc "status PACKAGE", "Status of a package"
     def status(package)
       puts blue { italic { "Status of #{package}" } }
-      puts Mordor::Packages.by_name(package).status.to_s
+      status = Mordor::Packages.by_name(package).status.to_s
     end
 
     desc "fetch PACKAGE", "Fetch a package's repo to the current directory"
