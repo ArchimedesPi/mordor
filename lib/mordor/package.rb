@@ -1,5 +1,11 @@
 module Mordor
   class Package
+    attr_reader :status
+
+    def initialize
+      @status = {:fetched => false, :installed => false}
+    end
+
     def fetch
       @status[:fetched] = true
     end
@@ -8,16 +14,12 @@ module Mordor
       @status[:fetched] = false
     end
 
-    def install!
+    def install
       @status[:installed] = true
     end
 
-    def remove!
+    def remove
       @status[:installed] = false
-    end
-
-    def status
-      return @status
     end
   end
 end
