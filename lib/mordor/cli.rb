@@ -7,6 +7,10 @@ include Term::ANSIColor
 module Mordor
   class CLI < Thor
 
+    desc "selfinstall", "Self-install Mordor once it's been gotten from RubyGems"
+    def selfinstall
+    end
+
     desc "status PACKAGE", "Status of a package"
     def status(package)
       puts blue { italic { "Status of #{package}" } }
