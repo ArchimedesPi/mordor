@@ -1,4 +1,7 @@
 module Mordor
+  # Package class for handling a package
+  # Its data will be fetched from a gist or something similar.
+  # @author Liam M
   class Package
     # @return [Hash] the status of the package
     attr_reader :status
