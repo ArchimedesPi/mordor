@@ -1,6 +1,8 @@
 module Mordor
   class Package
+    # @return [Hash] the status of the package
     attr_reader :status
+    # @return [String] the URL of the package download
     attr_reader :url
 
     def initialize
