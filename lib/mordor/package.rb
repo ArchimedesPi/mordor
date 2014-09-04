@@ -7,23 +7,23 @@ module Mordor
       @status = {:fetched => false, :installed => false}
     end
 
+    # Fetch the package from the package's @url.
     def fetch
-      # Fetch the package from the package's @url.
       @status[:fetched] = true
     end
 
+    # Reverses .fetch. Purges the package's download from the local filesystem
     def purge
-      # Reverses .fetch. Purges the package's download from the local filesystem
       @status[:fetched] = false
     end
 
+    # Install a package (ie run the buildscripts)
     def install
-      # Install a package (ie run the buildscripts)
       @status[:installed] = true
     end
 
+    # Remove a package that's been installed (ie run the destroyscripts)
     def remove
-      # Remove a package that's been installed (ie run the destroyscripts)
       @status[:installed] = false
     end
   end
