@@ -1,6 +1,7 @@
 module Mordor
   class Package
     attr_reader :status
+    attr_reader :url
 
     def initialize
       @status = {:fetched => false, :installed => false}
