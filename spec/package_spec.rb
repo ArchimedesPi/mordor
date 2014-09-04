@@ -5,7 +5,7 @@ RSpec.describe Mordor::Package do
     it "fetches the package and sets @status['fetched'] to true" do
       package = Mordor::Package.new
       package.fetch
-      expect(package.status['fetched']).to eq(true)
+      expect(package.status[:fetched]).to eq(true)
     end
   end
 end
