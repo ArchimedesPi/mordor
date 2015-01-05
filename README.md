@@ -9,7 +9,7 @@ Installation
 ============
 
 Requires:
-  + Bash
+  + Bash (or other modern Bourne-shell, i.e zsh, ksh. But Bash is still needed for tests)
 
 For testing:
   + Bats
