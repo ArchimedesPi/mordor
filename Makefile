@@ -4,3 +4,4 @@ TEST_DIRECTORY=test
 
 test:
 		bats test
+
