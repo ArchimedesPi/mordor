@@ -2,9 +2,31 @@
 # Mordor
 # Licensed 3-Clause BSD
 
-############################
-### Bootstrap the script ###
-############################
+set -e # Terminate if things go badly. This prevents
+# critical operations from being preformed on incomplete data
 
+# Functions to clean paths
 
+absolute_path() {
+	local dirty_path="$1"
+	pushd "$dirty_path" > /dev/null
+	local clean_path=`pwd -P`
+	popd > /dev/null
+
+	echo "$clean_path"
+}
+
+absolute_file_folder() {
+	local dirty_folder_path=`dirname $1`
+	echo `absolute_path $dirty_folder_path`
+}
+
+# Set some global variables for the script
+BASEDIR=`absolute_file_folder $BASH_SOURCE`
+LIBDIR=`absolute_path "$BASEDIR/../lib/"`
+
+# Grab all the libraries
+
+. $LIBDIR/colors.sh
+. $LIBDIR/logging.sh
 
