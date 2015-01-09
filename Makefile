@@ -4,7 +4,7 @@ PREFIX?=/usr/local
 .PHONY: test
 
 test:
-		bats test
+		bats test/
 
 install:
 		@echo "Installing Mordor to $(PREFIX)"
