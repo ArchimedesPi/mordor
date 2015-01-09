@@ -30,3 +30,4 @@ LIBDIR=`absolute_path "$BASEDIR/../lib/"`
 . $LIBDIR/colors.sh
 . $LIBDIR/logging.sh
 
+_info "\$\$\$_-_-_-_ $(_color $_red)Mordor$_reset_formatting $(_color $_blue)$VERSION$_reset_formatting _-_-_-_\$\$\$"
