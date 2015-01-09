@@ -23,7 +23,7 @@ absolute_file_folder() {
 
 # Set some global variables for the script
 BASEDIR=`absolute_file_folder $BASH_SOURCE`
-LIBDIR=`absolute_path "$BASEDIR/../lib/"`
+LIBDIR=`absolute_path "${BASEDIR[0]}/../lib/"`
 VERSION="0.1"
 
 # Grab all the libraries
@@ -32,3 +32,14 @@ VERSION="0.1"
 . $LIBDIR/logging.sh
 
 _info "$(_bg_color $_yellow)$(_color $_magenta)\$\$\$${_reset_formatting}$(_bg_color $_yellow)_-_-_-_$_reset_formatting $(_color $_red)Mordor$_reset_formatting $(_color $_blue)$VERSION$_reset_formatting $(_bg_color $_yellow)_-_-_-_$(_color $_magenta)\$\$\$$_reset_formatting"
+
+cmd="$1"
+
+if [[ ! $cmd ]]; then
+	exit
+fi
+
+# Source the command invoked
+case $cmd in
+	*)	source $LIBDIR/commands/$cmd.sh # If it's not a special case and it falls through...
+esac
