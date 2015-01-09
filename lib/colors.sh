@@ -8,10 +8,10 @@ _magenta=5
 _cyan=6
 _white=7
 
-_color() {
+function _color() {
 	echo `tput setaf $1`
 }
 
-_bg_color() {
+function _bg_color() {
 	echo `tput setab $1`
 }
