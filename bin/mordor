@@ -7,7 +7,7 @@ set -e # Terminate if things go badly. This prevents
 
 # Functions to clean paths
 
-absolute_path() {
+function absolute_path() {
 	local dirty_path="$1"
 	pushd "$dirty_path" > /dev/null
 	local clean_path=`pwd -P`
@@ -16,7 +16,7 @@ absolute_path() {
 	echo "$clean_path"
 }
 
-absolute_file_folder() {
+function absolute_file_folder() {
 	local dirty_folder_path=`dirname $1`
 	echo `absolute_path $dirty_folder_path`
 }
